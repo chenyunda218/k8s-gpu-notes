@@ -34,6 +34,12 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=<密碼> sh -s - server \
 ```bash
 grep nvidia /var/lib/rancher/k3s/agent/etc/containerd/config.toml
 ```
+輸出如下信息
+```bash
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes."nvidia"]
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes."nvidia".options]
+  BinaryName = "/usr/bin/nvidia-container-runtime"
+```
 ## Rancher
 Rancher是一套k8s的GUI操作介面，為方便後續使用，建議安裝rancher。
 
@@ -50,6 +56,13 @@ toolkit:
       value: /run/k3s/containerd/containerd.sock
 # ...
 ```
-```base
+```bash
 kubectl create ns gpu-operator
+```
+
+```bash
+helm upgrade -i nvdp nvdp/nvidia-device-plugin \
+  --namespace nvidia-device-plugin \
+  --set runtimeClassName=nvidia \
+  --create-namespace 
 ```
