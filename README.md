@@ -59,7 +59,7 @@ toolkit:
 ```bash
 kubectl create ns gpu-operator
 ```
-
+安裝nvidia-device-plugin，由於k3s無法自動發現runtimeClassName，因此需要主動配置runtimeClassName=nvidia。
 ```bash
 helm upgrade -i nvdp nvdp/nvidia-device-plugin \
   --namespace nvidia-device-plugin \
