@@ -130,10 +130,11 @@ data:
         failRequestsGreaterThanOne: false
         resources:
           - name: nvidia.com/gpu
-            replicas: 4
+            replicas: 10
 ```
 更新gpu-operator的配置
 ```yaml
+#...
 devicePlugin:
   args: []
   config:
@@ -141,4 +142,6 @@ devicePlugin:
     data: {}
     default: any
     name: time-slicing-config-all
+  #...
+#...
 ```
