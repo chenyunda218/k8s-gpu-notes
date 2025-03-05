@@ -40,9 +40,39 @@ grep nvidia /var/lib/rancher/k3s/agent/etc/containerd/config.toml
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes."nvidia".options]
   BinaryName = "/usr/bin/nvidia-container-runtime"
 ```
+
+## hosts配置
+在區域網沒有公網ip的情況下請配置`/etc/hosts`
+```
+# 為將要部署k3s和rancher的服務器配置域名。
+172.16.4.2 rancher.k3s.bw
+```
 ## Rancher
 Rancher是一套k8s的GUI操作介面，為方便後續使用，建議安裝rancher。
+參照https://ranchermanager.docs.rancher.com/getting-started/quick-start-guides/deploy-rancher-manager/helm-cli  
+安裝cert-manager
+```bash
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
+kubectl create namespace cattle-system
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.0/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.0/cert-manager.crds.yaml
+
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace
+```
+```bash
+helm install rancher rancher-latest/rancher \
+  --namespace cattle-system \
+  --set hostname=rancher.k3s.bw \
+  --set replicas=1 \
+  --set bootstrapPassword=<rancher登入時的密碼>
+```
 ## k8s GPU相關組件
 參照https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html  
 使用helm安裝gpu-operator。
