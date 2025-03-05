@@ -44,7 +44,8 @@ grep nvidia /var/lib/rancher/k3s/agent/etc/containerd/config.toml
 Rancher是一套k8s的GUI操作介面，為方便後續使用，建議安裝rancher。
 
 ## k8s GPU相關組件
-參照https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html，使用helm安裝gpu-operator。
+參照https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html  
+使用helm安裝gpu-operator。
 由於k3s的containerd是內置的，與本機的位置不同，因此需要在helm values中作出更改
 ```yaml
 # ...
