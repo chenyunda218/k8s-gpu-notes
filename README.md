@@ -111,3 +111,34 @@ spec:
   #...
 #...
 ```
+# time slicing
+由於gpu是獨占的，被一個pod占用後其他pod無法使用，因此需要用time slicing將一個gpu偽裝成多個
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-slicing-config-all
+  namespace: gpu-operator
+data:
+  any: |-
+    version: v1
+    flags:
+      migStrategy: none
+    sharing:
+      timeSlicing:
+        renameByDefault: false
+        failRequestsGreaterThanOne: false
+        resources:
+          - name: nvidia.com/gpu
+            replicas: 4
+```
+更新gpu-operator的配置
+```yaml
+devicePlugin:
+  args: []
+  config:
+    create: false
+    data: {}
+    default: any
+    name: time-slicing-config-all
+```
